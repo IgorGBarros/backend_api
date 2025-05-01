@@ -1,4 +1,4 @@
-Aqui está a versão atualizada do seu `README.md`, com a implementação do **Watchtower com Slack**, criação do **Webhook no Slack**, e o processo de **login público no Docker** para o `docker push`:
+
 
 ---
 
