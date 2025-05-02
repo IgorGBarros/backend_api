@@ -325,4 +325,9 @@ Engenheiro Mecatrônico | Desenvolvedor de Software Fullstack | Cientista de Dad
 ---
 
 ## 📄 Licença
+
+Este projeto está sob a licença [MIT](LICENSE).
+```
+
 ---
+
