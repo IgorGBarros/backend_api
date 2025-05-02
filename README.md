@@ -325,10 +325,4 @@ Engenheiro Mecatrônico | Desenvolvedor de Software Fullstack | Cientista de Dad
 ---
 
 ## 📄 Licença
-
-Este projeto está sob a licença [MIT](LICENSE).
-```
-
 ---
-
-Se precisar, posso gerar esse arquivo como `README.md` para você. Posso prosseguir com isso?
