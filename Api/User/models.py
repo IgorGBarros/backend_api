@@ -4,6 +4,28 @@ from django.utils import timezone
 # Create your models here.
 from firebase_admin import auth
 import firebase_admin
+
+from django.conf import settings
+
+class Plan(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField(blank=True)
+    is_free = models.BooleanField(default=False)
+    max_projects = models.IntegerField(default=1)
+    max_users = models.IntegerField(default=1)
+    max_storage_mb = models.IntegerField(default=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Role(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -54,11 +76,38 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
+    
+    plan = models.ForeignKey(Plan, on_delete=models.SET_NULL, null=True, blank=True)
+    role = models.ForeignKey('User.Role', on_delete=models.SET_NULL, null=True, blank=True)
     objects = CustomUserManager()
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
 
     def __str__(self):
         return self.email
+    
+
+class SubscriptionPlan(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    stripe_price_id = models.CharField(max_length=255, blank=True, null=True)  # usado na integração com Stripe
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Subscription(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    plan = models.ForeignKey(SubscriptionPlan, on_delete=models.SET_NULL, null=True)
+    valid_until = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.plan.name}"
+
+
+# models.py
+
     

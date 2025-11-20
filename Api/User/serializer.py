@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 
 from django.contrib.auth import get_user_model
-from .models import CustomUser
+from .models import CustomUser,Role
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -54,4 +54,16 @@ class CustomUserSerializer(serializers.ModelSerializer):
             name=validated_data['name']
         )
         return user
-    
+
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = ['id', 'name']
+
+class UserSerializer(serializers.ModelSerializer):
+    role = RoleSerializer()
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'email', 'name', 'role']

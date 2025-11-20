@@ -1,23 +1,17 @@
-# Usando uma imagem oficial do Python
 FROM python:3.12-slim
 
-# Diretório de trabalho dentro do container
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends netcat-openbsd && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Copiando todos os arquivos do projeto para o container
-COPY . /app/
-
-# Instalando dependências
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar o script de espera (wait-for-postgres.sh)
-COPY wait-for-postgres.sh /app/wait-for-postgres.sh
+COPY . .
 
-# Tornar o script executável
 RUN chmod +x /app/wait-for-postgres.sh
 
-# Expondo a porta do Django
-EXPOSE 8000
-
-# Comando para rodar o script que espera o PostgreSQL e depois inicia o Django
-CMD ["/app/wait-for-postgres.sh"]
+CMD ["sh", "-c", "/app/wait-for-postgres.sh"]

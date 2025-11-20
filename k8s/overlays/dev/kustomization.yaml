@@ -1,0 +1,5 @@
+resources:
+  - ../../base
+  - postgres-deployment.yaml
+  - postgres-service.yaml
+  - secret-dev.yaml

@@ -1,0 +1,12 @@
+resources:
+  - backend-deployment.yaml
+  - service.yaml
+secretGenerator:
+  - name: backend-secret
+    literals:
+      - DATABASE_URL=dummy
+      - SECRET_KEY=dummy
+      - DJANGO_ALLOWED_HOSTS=dummy
+      - DJANGO_DEBUG=dummy
+generatorOptions:
+  disableNameSuffixHash: true
