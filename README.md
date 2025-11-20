@@ -330,3 +330,7 @@ Este projeto está sob a licença [MIT](LICENSE).
 ```
 
 ---
+<<<<<<< HEAD
+=======
+
+>>>>>>> 288bb0952278fc5ce0ed558b6e91166333552cf2
