@@ -1,4 +1,3 @@
-# base/backend-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,6 +19,10 @@ spec:
           ports:
             - containerPort: 8000
           env:
+           #🔥 Variável crítica adicionada aqui
+           
+            - name: DJANGO_SETTINGS_MODULE
+              value: Api.settings
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:

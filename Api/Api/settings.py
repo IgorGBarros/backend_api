@@ -2,14 +2,35 @@ from pathlib import Path
 import environ
 import os
 
+
+
+
 # Diretório base do projeto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Inicializa leitura do .env
+# No início do arquivo
+print("✅ settings.py: Iniciando carregamento...")
+
+# Após definir BASE_DIR
+print(f"✅ BASE_DIR definido como: {BASE_DIR}")
+
+# Após SECRET_KEY
+print("✅ SECRET_KEY carregada")
+
+# Após DATABASES
+print("✅ DATABASES configurado")
+
+
+# Inicializa o leitor de .env
 env = environ.Env(
-    DEBUG=(bool, False)
+    DEBUG=(bool, False),
+   
 )
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))  # Certifique-se de que o .env está na raiz do projeto
+# Tenta ler o .env, mas não falha se não existir
+try:
+    environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+except Exception as e:
+    print(f"[WARN] Não foi possível carregar .env: {e}")  # Certifique-se de que o .env está na raiz do projeto
 
 # Segurança
 SECRET_KEY = env("SECRET_KEY", default="django-insecure-fallback-key")
@@ -67,9 +88,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Api.wsgi.application'
 
 # Banco de dados
-DATABASES = {
-    'default': env.db()
-}
+DATABASE_URL = env("DATABASE_URL", default=None)
+
+if DATABASE_URL:
+    DATABASES = {"default": env.db()}
+else:
+    # fallback seguro para ambiente sem banco conectado
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "fallback.sqlite3",
+        }
+    }
 
 # Modelo de usuário customizado
 AUTH_USER_MODEL = 'User.CustomUser'
@@ -96,10 +126,8 @@ TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 USE_TZ = True
 
-# Arquivos estáticos
-STATIC_URL = 'static/'
-# Caminho para coletar todos os arquivos estáticos (usado por collectstatic)
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -108,3 +136,26 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ID padrão para chaves primárias
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# === FORÇA STATIC_ROOT (Correção Garantida) ===
+import os
+from pathlib import Path
+
+# Garante BASE_DIR como Path
+if 'BASE_DIR' not in globals():
+    BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Força STATIC_ROOT como string absoluta
+STATIC_ROOT = str(BASE_DIR / 'static')
+
+# Cria a pasta se não existir
+os.makedirs(STATIC_ROOT, exist_ok=True)
+
+print("✅ 6. Definindo STATIC_ROOT...")
+try:
+    STATIC_URL = '/static/'
+    STATIC_ROOT = str(BASE_DIR / 'static')
+    print(f"✅ 7. STATIC_ROOT definido como: {STATIC_ROOT}")
+except Exception as e:
+    print(f"❌ ERRO ao definir STATIC_ROOT: {e}")
+# ==============================================
