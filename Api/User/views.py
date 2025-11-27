@@ -150,3 +150,19 @@ class PasswordResetConfirmView(APIView):
                 {"error": "Link inválido"}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
+
+
+from rest_framework.decorators import api_view, permission_classes
+from .permissions import IsProUser, IsAdmin
+
+@api_view(['GET'])
+@permission_classes([IsProUser])
+def pro_feature(request):
+    return Response({"message": "Acesso permitido para usuários Pro!"})
+
+@api_view(['POST'])
+@permission_classes([IsAdmin])
+def create_team(request):
+    # Lógica para criar time
+    pass

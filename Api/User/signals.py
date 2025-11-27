@@ -58,3 +58,5 @@ def assign_default_plan_and_role(sender, instance, created, **kwargs):
         # Salva se houve alteração
         if updated:
             instance.save(update_fields=['plan', 'role'])
+
+
