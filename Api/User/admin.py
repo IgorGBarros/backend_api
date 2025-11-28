@@ -1,6 +1,6 @@
 # admin.py
 from django.contrib import admin
-from .models import CustomUser, Plan, Role, SubscriptionPlan, Subscription
+from .models import CustomUser, Plan, Role, SubscriptionPlan, Subscription,UserAnalytics
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 @admin.register(CustomUser)
@@ -29,3 +29,4 @@ admin.site.register(Plan)
 admin.site.register(Role)
 admin.site.register(SubscriptionPlan)
 admin.site.register(Subscription)
+admin.site.register(UserAnalytics)

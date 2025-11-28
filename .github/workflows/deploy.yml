@@ -1,0 +1,13 @@
+# .github/workflows/deploy.yml
+name: Deploy to Kubernetes
+
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t igorgbarros/backend:latest .
+      - run: docker push igorgbarros/backend:latest
+      - run: kubectl apply -k overlays/dev --kubeconfig ${{ secrets.KUBECONFIG }}
